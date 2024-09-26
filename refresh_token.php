@@ -1,10 +1,7 @@
 <?php
 session_start();
-require 'vendor/autoload.php'; 
-
-use Dotenv\Dotenv;
-$dotenv = Dotenv::createImmutable(__DIR__);
-$dotenv->load();
+require 'src/config/config.php';
+// require 'vendor/autoload.php'; 
 
 $apiUrl = 'http://192.168.1.82/legacy/Api/access_token';
 $grant_type = 'password';

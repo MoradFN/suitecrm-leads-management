@@ -1,47 +1,30 @@
 <?php
 session_start();
-require 'vendor/autoload.php'; 
+require 'src/config/config.php';
+require 'src/SuiteCRM/ApiClient.php';
+require 'src/SuiteCRM/TokenManager.php';
 
-use Dotenv\Dotenv;
-$dotenv = Dotenv::createImmutable(__DIR__);
-$dotenv->load();
+// Token management
+$tokenManager = new TokenManager();
+$accessToken = $tokenManager->getAccessToken();
 
-// Check if access token is in session
-if (!isset($_SESSION['access_token'])) {
-    // If no access token, go to refresh token page
-    header("Location: refresh_token.php");
-    exit();
-}
-$accessToken = $_SESSION['access_token'];
 $apiUrl = 'http://192.168.1.82/legacy/Api/V8/module/Accounts';
 
-$ch = curl_init();
+try {
+    $apiClient = new ApiClient($accessToken);
+    $responseData = $apiClient->callApi($apiUrl);
 
-curl_setopt($ch, CURLOPT_URL, $apiUrl);
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-curl_setopt($ch, CURLOPT_HTTPHEADER, [
-    'Authorization: Bearer ' . $accessToken,
-    'Content-Type: application/vnd.api+json'
-]);
-// Execute the request
-$response = curl_exec($ch);
-curl_close($ch);
-
-echo $response;
-
-
-$responseData = json_decode($response, true);
-if (isset($responseData['error'])) {
-    // Handle token errors specifically
-    if ($responseData['error'] === 'access_denied') {
-        // Redirect to refresh token page
-        header("Location: refresh_token.php");
-        exit();
+    if (isset($responseData['error'])) {
+        if ($responseData['error'] === 'access_denied') {
+            header("Location: refresh_token.php");
+            exit();
+        } else {
+            echo "API Error: " . $responseData['error_description'];
+        }
     } else {
-        // Handle other API errors
-        echo "API Error: " . $responseData['error_description'];
+        // Successfully retrieved accounts, display them
+        echo json_encode($responseData, JSON_PRETTY_PRINT);
     }
-} else {
-    // Successfully retrieved accounts, display them
-    echo $response;
+} catch (Exception $e) {
+    echo 'Error: ' . $e->getMessage();
 }

@@ -1,8 +1,8 @@
 <?php
 session_start();
 require 'src/config/config.php';
-require 'src/SuiteCRM/ApiClient.php';
-require 'src/SuiteCRM/TokenManager.php';
+require 'src/Services/ApiClient.php';
+require 'src/Services/TokenManager.php';
 
 // Token management
 $tokenManager = new TokenManager();

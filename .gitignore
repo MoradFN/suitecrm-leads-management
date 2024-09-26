@@ -1,0 +1,24 @@
+# Ignore vendor directory (Composer dependencies)
+vendor/
+# Ignore environment files
+.env
+.env.local
+.env.*.local
+# Ignore Composer lock file if not necessary to commit
+composer.lock
+# Ignore OS specific files
+.DS_Store
+Thumbs.db
+# Ignore IDE specific files
+.vscode/
+.idea/
+# Ignore log files and other temporary files
+*.log
+*.cache
+*.bak
+*.swp
+# Ignore PHPUnit result caches
+.phpunit.result.cache
+# Ignore any debug output files
+*.log
+*.tmp

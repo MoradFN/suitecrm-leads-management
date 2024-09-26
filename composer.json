@@ -1,0 +1,20 @@
+{
+    "name": "morad_admin/suitecrm-leads-management",
+    "description": "A PHP-based project that interacts with SuiteCRM via its API to manage leads, allowing users to create, retrieve, and manipulate lead data through a web interface.",
+    "type": "project",
+    "require": {
+        "guzzlehttp/guzzle": "^7.9",
+        "vlucas/phpdotenv": "^5.6"
+    },
+    "autoload": {
+        "psr-4": {
+            "MoradAdmin\\SuitecrmLeadsManagement\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Morad Tumah"
+        }
+    ],
+    "minimum-stability": "stable"
+}

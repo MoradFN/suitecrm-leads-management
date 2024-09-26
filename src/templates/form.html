@@ -1,0 +1,14 @@
+<form action="/src/log_call.php" method="POST">
+    <input type="hidden" name="contact_id" value="12345"> <!-- Pass the contact ID dynamically -->
+    
+    <label for="outcome">Call Outcome:</label>
+    <select name="outcome" id="outcome">
+        <option value="Interested">Interested</option>
+        <option value="No Thanks">No Thanks</option>
+        <option value="Call Later">Call Later</option>
+        <option value="No Answer">No Answer</option>
+        <option value="Wrong Number">Wrong Number</option>
+    </select>
+    
+    <button type="submit">Log Call</button>
+</form>

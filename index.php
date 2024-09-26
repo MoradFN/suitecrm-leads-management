@@ -1,30 +1,47 @@
-<!-- index.php -->
 <?php
-require __DIR__ . '/vendor/autoload.php';
-$dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
+session_start();
+require 'vendor/autoload.php'; 
+
+use Dotenv\Dotenv;
+$dotenv = Dotenv::createImmutable(__DIR__);
 $dotenv->load();
 
-// Access environment variables
-$clientId = $_ENV['OAUTH2_CLIENT_ID'];
-$clientSecret = $_ENV['OAUTH2_CLIENT_SECRET'];
-$tokenUrl = $_ENV['OAUTH2_TOKEN_URL'];
-
-use MoradAdmin\SuitecrmLeadsManagement\SuiteCrmApi;
-
-$api = new SuiteCrmApi();
-$api->testApi();
-
-echo "Client ID: $clientId\n";
-
-if (file_exists(__DIR__ . '/vendor/autoload.php')) {
-    require __DIR__ . '/vendor/autoload.php';
-    echo "Autoload file loaded successfully.";
-} else {
-    echo "Autoload file NOT found.";
+// Check if access token is in session
+if (!isset($_SESSION['access_token'])) {
+    // If no access token, go to refresh token page
+    header("Location: refresh_token.php");
+    exit();
 }
+$accessToken = $_SESSION['access_token'];
+$apiUrl = 'http://192.168.1.82/legacy/Api/V8/module/Accounts';
 
-if (class_exists('MoradAdmin\SuitecrmLeadsManagement\SuiteCrmApi')) {
-    echo "Class SuiteCrmApi found!";
+$ch = curl_init();
+
+curl_setopt($ch, CURLOPT_URL, $apiUrl);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_HTTPHEADER, [
+    'Authorization: Bearer ' . $accessToken,
+    'Content-Type: application/vnd.api+json'
+]);
+// Execute the request
+$response = curl_exec($ch);
+curl_close($ch);
+
+echo $response;
+
+
+$responseData = json_decode($response, true);
+if (isset($responseData['error'])) {
+    // Handle token errors specifically
+    if ($responseData['error'] === 'access_denied') {
+        // Redirect to refresh token page
+        header("Location: refresh_token.php");
+        exit();
+    } else {
+        // Handle other API errors
+        echo "API Error: " . $responseData['error_description'];
+    }
 } else {
-    echo "Class SuiteCrmApi NOT found!";
+    // Successfully retrieved accounts, display them
+    echo $response;
 }

@@ -1,6 +1,5 @@
 <?php
-// src/SuiteCrmApi.php
-namespace MoradAdmin\SuitecrmLeadsManagement;
+namespace MoradAdmin\SuitecrmLeadsManagement\SuiteCRM;
 
 class SuiteCrmApi {
     public function testApi() {

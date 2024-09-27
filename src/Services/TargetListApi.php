@@ -12,7 +12,7 @@ Here’s a class that handles the logic for creating and assigning target lists:
 
 class TargetListsApi extends ApiClient
 {
-    private $baseUrl = 'http://192.168.1.82/legacy/Api/V8/module/TargetLists';
+    private $baseUrl = 'http://192.168.1.82/legacy/Api/V8/module/ProspectLists';
     private $tokenManager;
 
     public function __construct($accessToken, $tokenManager)
@@ -22,13 +22,15 @@ class TargetListsApi extends ApiClient
     }
 
     // Create a new target list
-    public function createTargetList($name)
+    public function createTargetList($name, $description = 'Automated Target List', $assignedUserId = '1')
     {
         $data = [
             "data" => [
-                "type" => "TargetLists",
+                "type" => "ProspectLists",
                 "attributes" => [
                     "name" => $name,
+                    "description" => $description,
+                    "assigned_user_id" => $assignedUserId,  // Set this to the actual user ID
                 ]
             ]
         ];
@@ -55,16 +57,19 @@ class TargetListsApi extends ApiClient
     // Add an account to a target list
     public function addAccountToTargetList($targetListId, $accountId)
     {
-        $url = $this->baseUrl . "/$targetListId/link/Accounts";
+        $url = $this->baseUrl . "/$targetListId/relationships/Accounts";
         $data = [
             "data" => [
-                "id" => $accountId,
-                "type" => "Accounts"
+                [
+                    "id" => $accountId,
+                    "type" => "Accounts"
+                ]
             ]
         ];
 
         return $this->post($url, $data);
     }
+
 
     // Retrieve all target lists
     public function getAllTargetLists()

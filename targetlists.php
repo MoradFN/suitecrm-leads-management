@@ -1,76 +1,65 @@
-<!-- In your targetlists.php, you could create a form that allows an admin to:
-
-Create a new target list.
-Add accounts to the target list.
-Assign the target list to employees. -->
-
-
-
 <?php
 session_start();
 require 'src/config/config.php';
-require 'src/Services/TargetListsApi.php';
-require 'src/Services/AccountsApi.php';
-require 'src/Services/EmployeesApi.php';  // Assume this handles employee data
+require 'src/Services/TokenManager.php';  
+require 'src/Services/ApiClient.php';  
+require 'src/Services/AccountsApi.php';  
+require 'src/Services/TargetListApi.php';  
 
-$tokenManager = new TokenManager();
-$accessToken = $tokenManager->getAccessToken();
+if (isset($_POST['distribute'])) {
+    $tokenManager = new TokenManager();
+    $accessToken = $tokenManager->getAccessToken();  
 
-$targetListsApi = new TargetListsApi($accessToken, $tokenManager);
-$accountsApi = new AccountsApi($accessToken, $tokenManager);
-$employeesApi = new EmployeesApi($accessToken, $tokenManager);  // Handles employees
+    $accountsApi = new AccountsApi($accessToken, $tokenManager);
+    $targetListApi = new TargetListApi($accessToken);
 
-// Handle form submission to create a target list and assign accounts
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $targetListName = $_POST['target_list_name'];
-    $employeeId = $_POST['employee_id'];
+    // Define pagination variables
+    $pageNumber = 1;
+    $pageSize = 200;  // Fetch 50 accounts per page to process them in chunks
 
-    // Create target list
-    $newTargetList = $targetListsApi->createTargetList($targetListName);
-    $targetListId = $newTargetList['data']['id'];
+    // Get all accounts with pagination
+    $accounts = $accountsApi->getAllAccounts('name', $pageNumber, $pageSize);
 
-    // Add accounts to the target list
-    foreach ($_POST['accounts'] as $accountId) {
-        $targetListsApi->addAccountToTargetList($targetListId, $accountId);
-    }
+    // Define how many accounts per target list
+    $accountsPerTargetList = 200;  
+    $accountCount = 0;
+    $targetListCount = 1;
 
-    // Assign target list to an employee
-    $targetListsApi->assignTargetList($targetListId, $employeeId);
+    // Create the first target list
+    $currentTargetList = $targetListApi->createTargetList("Target List $targetListCount");
 
-    echo "Target list assigned successfully!";
+    // Loop through accounts and assign them to target lists
+    if (isset($accounts['data']) && !empty($accounts['data'])) {
+        foreach ($accounts['data'] as $account) {
+            $accountId = $account['id'];
+            
+            // Assign the account to the current target list
+            $targetListApi->addAccountToTargetList($currentTargetList['data']['id'], $accountId);
+
+            // Increment account counter
+            $accountCount++;
+
+            // Once we've assigned `accountsPerTargetList` accounts, create a new target list
+            if ($accountCount >= $accountsPerTargetList) {
+                $targetListCount++;
+                $currentTargetList = $targetListApi->createTargetList("Target List $targetListCount");
+                $accountCount = 0;  // Reset account counter
+            }
+        }
+if (isset($response['error'])) {
+    echo "<p>Error: " . htmlspecialchars($response['error']['message']) . "</p>";
 }
+
+        echo "Accounts have been successfully distributed over $targetListCount target lists.";
+    } else {
+        echo "No accounts found to distribute.";
+    }
+}
+
 ?>
 
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Target Lists</title>
-</head>
-<body>
-    <h1>Create and Assign Target List</h1>
-    <form method="POST" action="targetlists.php">
-        <label for="target_list_name">Target List Name:</label>
-        <input type="text" id="target_list_name" name="target_list_name" required><br>
 
-        <label for="employee_id">Assign to Employee:</label>
-        <select id="employee_id" name="employee_id">
-            <?php
-            $employees = $employeesApi->getAllEmployees();
-            foreach ($employees['data'] as $employee) {
-                echo "<option value='{$employee['id']}'>{$employee['attributes']['name']}</option>";
-            }
-            ?>
-        </select><br>
-
-        <h2>Select Accounts to Add:</h2>
-        <?php
-        $accounts = $accountsApi->getAllAccounts();
-        foreach ($accounts['data'] as $account) {
-            echo "<input type='checkbox' name='accounts[]' value='{$account['id']}'> {$account['attributes']['name']}<br>";
-        }
-        ?>
-
-        <button type="submit">Create and Assign Target List</button>
-    </form>
-</body>
-</html>
+<!-- HTML Form to trigger account distribution -->
+<form method="POST" action="">
+    <button type="submit" name="distribute">Distribute Accounts to Target Lists</button>
+</form>

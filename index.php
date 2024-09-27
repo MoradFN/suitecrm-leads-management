@@ -33,16 +33,16 @@ $notesApi = new NotesApi($accessToken, $tokenManager);
 
 
 // Get all contacts
-$contacts = $contactsApi->getAllContacts();
+// $contacts = $contactsApi->getAllContacts();
 
 // Get all notes
-$notes = $notesApi->getAllNotes();
+// $notes = $notesApi->getAllNotes();
 
 
 
 
 // // Delete a specific note
-$deleteNote = $notesApi->deleteNoteById("note_id");
+// $deleteNote = $notesApi->deleteNoteById("note_id");
 
 // Output results
 // echo json_encode($accounts, JSON_PRETTY_PRINT);

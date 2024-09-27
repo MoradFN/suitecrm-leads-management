@@ -3,3 +3,22 @@ Contact Info: support.kid@example.tw
 Tel: (695) 120-2116
 Title: VP Sales   <--------- Fixa så att sales prioriteras först.
 Department: N/A
+
+
+targetlistapi.php:
+<!-- 1. Table Structure (Backend Logic)
+You will need to create three tables (or data structures) in your backend:
+accounts: Stores company information.
+contacts: Stores people associated with companies.
+target_lists: Stores target lists, including which accounts belong to them and which employee is assigned to each target list.
+call_logs: Tracks call attempts, results, and status for each contact.
+2. API Class for Managing Target Lists (TargetListsApi.php)
+Here’s a class that handles the logic for creating and assigning target lists: -->
+
+
+
+target_lists.php:
+<!-- In your targetlists.php, you could create a form that allows an admin to:
+Create a new target list.
+Add accounts to the target list.
+Assign the target list to employees. -->

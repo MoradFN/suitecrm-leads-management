@@ -34,7 +34,15 @@ class ApiClient
 
         curl_close($ch);
         return json_decode($response, true);
+        
+  if (isset($decodedResponse['errors'])) {
+            echo "<p>Error: " . htmlspecialchars($decodedResponse['errors'][0]['detail']) . "</p>";
+            return null;  // Return null if error occurs
+        }
+
+        return $decodedResponse;
     }
+    
 
     public function get($url)
     {

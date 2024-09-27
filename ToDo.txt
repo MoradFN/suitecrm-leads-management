@@ -1,0 +1,5 @@
+Name: Kitty Oates
+Contact Info: support.kid@example.tw
+Tel: (695) 120-2116
+Title: VP Sales   <--------- Fixa så att sales prioriteras först.
+Department: N/A

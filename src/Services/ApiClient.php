@@ -1,6 +1,5 @@
 <?php
 // src/Services/ApiClient.php
-// src/Services/ApiClient.php
 class ApiClient
 {
     protected $accessToken;
@@ -12,6 +11,8 @@ class ApiClient
 
     protected function request($method, $url, $data = null)
     {
+        echo "Requesting URL: $url with method: $method" . PHP_EOL;  // Debug the URL and method
+
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);

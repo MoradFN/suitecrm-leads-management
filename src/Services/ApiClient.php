@@ -1,15 +1,16 @@
 <?php
 // src/Services/ApiClient.php
+// src/Services/ApiClient.php
 class ApiClient
 {
-    private $accessToken;
+    protected $accessToken;
 
     public function __construct($accessToken)
     {
         $this->accessToken = $accessToken;
     }
 
-    public function callApi($url)
+    protected function request($method, $url, $data = null)
     {
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
@@ -18,9 +19,14 @@ class ApiClient
             'Authorization: Bearer ' . $this->accessToken,
             'Content-Type: application/vnd.api+json',
         ]);
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $method);
+
+        if ($data !== null) {
+            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+        }
+
         $response = curl_exec($ch);
 
-        // Error handling for cURL
         if (curl_errno($ch)) {
             throw new Exception('Curl error: ' . curl_error($ch));
         }
@@ -28,4 +34,25 @@ class ApiClient
         curl_close($ch);
         return json_decode($response, true);
     }
+
+    public function get($url)
+    {
+        return $this->request('GET', $url);
+    }
+
+    public function post($url, $data)
+    {
+        return $this->request('POST', $url, $data);
+    }
+
+    public function patch($url, $data)
+    {
+        return $this->request('PATCH', $url, $data);
+    }
+
+    public function delete($url)
+    {
+        return $this->request('DELETE', $url);
+    }
 }
+

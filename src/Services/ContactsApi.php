@@ -13,7 +13,7 @@ class ContactsApi extends ApiClient
     // }
     public function __construct($accessToken)
     {
-        parent::__construct($accessToken);  // Only pass the access token to ApiClient
+        parent::__construct($accessToken);  // 
     }
 
     // Get all contacts
@@ -22,7 +22,7 @@ class ContactsApi extends ApiClient
         return $this->get($this->baseUrl);
     }
 
-    // Fetch related contacts for a specific account
+    // Fetch related contacts for a specific account  ---- använd för targetlist, etc.
     public function getContactsByUrl($accountId)
     {
         $url = 'http://192.168.1.82/legacy/Api/V8/module/Accounts/' . $accountId . '/relationships/contacts'; 

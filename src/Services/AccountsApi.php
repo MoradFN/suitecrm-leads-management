@@ -48,7 +48,7 @@ class AccountsApi extends ApiClient
         return $this->handleTokenExpiration($callback);
     }
 
-    // API method for creating an account with token refresh logic
+    // API method for creating an account with token refresh logic -- test
     public function createAccount($name)
     {
         $data = [
@@ -68,7 +68,7 @@ class AccountsApi extends ApiClient
         return $this->handleTokenExpiration($callback);
     }
 
-    // Other API methods like updateAccount(), getAccountById(), searchAccount() etc.
+    // Other API methods like updateAccount(), getAccountById(), searchAccount() etc. --- test
     public function updateAccount($accountId, $name, $email)
     {
         $url = $this->baseUrl . "/$accountId";
@@ -91,6 +91,8 @@ class AccountsApi extends ApiClient
         return $this->handleTokenExpiration($callback);
     }
 
+
+//---------------------------------------------
     public function getAccountById($accountId)
     {
         $callback = function () use ($accountId) {
@@ -102,7 +104,7 @@ class AccountsApi extends ApiClient
         return $this->handleTokenExpiration($callback);
     }
 
-    public function searchAccount($name, $email)
+    public function searchAccount($name, $email) // - TEst
     {
         $callback = function () use ($name, $email) {
             $url = $this->baseUrl . "?filter[operator]=or&filter[name][like]=$name&filter[email1][like]=$email";

@@ -4,15 +4,15 @@ session_start();
 
 require 'src/config/config.php';
 
-require 'src/Services/ApiClient.php';  // Loads the ApiClient class to make API requests.
-require 'src/Services/TokenManager.php';  // Loads the TokenManager class for handling access tokens.
+require 'src/Services/ApiClient.php';  // MT: Hämta Api klient klassen, för att göra alla api calls
+require 'src/Services/TokenManager.php'; 
 
-// require 'src/Services/AccountsApi.php'; //MOVED to accounts.php
+// require 'src/Services/AccountsApi.php'; //FLYTTAD TILL ACCOUNTS.PHP
 require 'src/Services/ContactsApi.php'; 
 require 'src/Services/NotesApi.php';  
 
 $tokenManager = new TokenManager();
-$accessToken = $tokenManager->getAccessToken();  // Get token from session or refresh
+$accessToken = $tokenManager->getAccessToken();  // Hämta token, om ej finns så refrshar den.
 
 // Pass both the accessToken and the tokenManager to the AccountsApi constructor
 
@@ -21,7 +21,7 @@ $notesApi = new NotesApi($accessToken, $tokenManager);
 
 
 // // MOVED to accounts.php
-// $accountsApi = new AccountsApi($accessToken, $tokenManager);  // Instantiate the API class with the token and token manager
+// $accountsApi = new AccountsApi($accessToken, $tokenManager); 
 // // Get all accounts
 // $accounts = $accountsApi->getAllAccounts();
 // // // Create an account
@@ -33,16 +33,16 @@ $notesApi = new NotesApi($accessToken, $tokenManager);
 
 
 // Get all contacts
-// $contacts = $contactsApi->getAllContacts();
+$contacts = $contactsApi->getAllContacts();
 
 // Get all notes
-// $notes = $notesApi->getAllNotes();
+$notes = $notesApi->getAllNotes();
 
 
 
 
 // // Delete a specific note
-// $deleteNote = $notesApi->deleteNoteById("note_id");
+$deleteNote = $notesApi->deleteNoteById("note_id");
 
 // Output results
 // echo json_encode($accounts, JSON_PRETTY_PRINT);
@@ -53,7 +53,7 @@ $notesApi = new NotesApi($accessToken, $tokenManager);
 // echo json_encode($updatedAccount, JSON_PRETTY_PRINT);
 // echo json_encode($deleteNote, JSON_PRETTY_PRINT);
 
-// You can now redirect users to different pages like accounts.php, contacts.php, etc., instead of doing everything in one place.
+// REdirecta till olika pages, (Behävs ej, använder för att ha targetslist i annan fil)[test]
 echo "<h1>Welcome to the Dashboard</h1>";
 echo "<a href='accounts.php'>View Accounts</a><br>";
 echo "<a href='contacts.php'>View Contacts</a><br>";

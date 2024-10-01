@@ -11,7 +11,7 @@ class ApiClient
 
     protected function request($method, $url, $data = null)
     {
-        echo "Requesting URL: $url with method: $method" . PHP_EOL;  // Debug the URL and method
+        // echo "Requesting URL: $url with method: $method" . PHP_EOL;  // Debugga url, klar och fungerar.(Ha kvar för senare)
 
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);

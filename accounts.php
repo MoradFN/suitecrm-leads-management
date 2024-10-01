@@ -13,9 +13,9 @@ $accessToken = $tokenManager->getAccessToken();
 $accountsApi = new AccountsApi($accessToken, $tokenManager);
 $contactsApi = new ContactsApi($accessToken);
 
-// Define pagination variables dynamically from query parameters
+// Define pagination variables dynamically from query parameters --GPT
 $pageNumber = isset($_GET['page']) && is_numeric($_GET['page']) ? (int)$_GET['page'] : 1;
-$pageSize = 10; // Number of accounts to fetch per page
+$pageSize = 10; // Ändra beroende på hur många sidor jag vill ha
 
 // Get all accounts with pagination
 $accounts = $accountsApi->getAllAccounts('name', $pageNumber, $pageSize);
@@ -27,14 +27,14 @@ if (!isset($accounts['data'])) {
 }
 
 if (!empty($accounts['data'])) {
-    // Display the accounts and related contacts
+    // Visa accounts och relaterade kontakter --Klar
     foreach ($accounts['data'] as $account) {
         // Display account information
         $accountName = htmlspecialchars($account['attributes']['name']);
         $billingCity = htmlspecialchars($account['attributes']['billing_address_city']);
         echo "<h2>Account: $accountName - $billingCity</h2>";
 
-        // Retrieve contacts related to this account
+        // MT: Hämta kontakter relaterade till detta konto -- klar
         $contacts = $contactsApi->getContactsByUrl($account['id']);
 
         if (isset($contacts['data']) && !empty($contacts['data'])) {
@@ -61,7 +61,7 @@ if (!empty($accounts['data'])) {
         }
     }
 
-    // Display pagination links
+    // Display pagination links -- klar
     echo '<div style="margin-top: 20px;">';
     if ($pageNumber > 1) {
         echo '<a href="?page=' . ($pageNumber - 1) . '">Previous</a> | ';

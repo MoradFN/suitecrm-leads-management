@@ -1,4 +1,6 @@
 <?php
+ini_set("display_errors", 1);
+error_reporting(E_ALL);
 // /src/config
 // Set the root directory relative to the config file
 $rootPath = dirname(__DIR__, 2); // Moves up two directories from config to root

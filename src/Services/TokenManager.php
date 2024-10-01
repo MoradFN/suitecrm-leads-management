@@ -6,17 +6,23 @@ class TokenManager
     {
         // Check if the access token is in the session
         if (isset($_SESSION['access_token'])) {
-            return $_SESSION['access_token'];  // Returns the token if it exists in the session.
+            return $_SESSION['access_token'];
         }
 
-       // If not, redirect to refresh_token.php to get a new token
-       header("Location: refresh_token.php");
-       exit();
+        // If not, refresh the token
+        $this->refreshAccessToken();
     }
 
     public function setAccessToken($token)
     {
-        // Stores the access token in the session
         $_SESSION['access_token'] = $token;
+    }
+
+    // Add the refreshAccessToken() method
+    public function refreshAccessToken()
+    {
+        // Logic to refresh the access token
+        header("Location: refresh_token.php");  // Redirect to refresh_token.php to handle token refresh
+        exit();
     }
 }
